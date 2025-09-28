@@ -12,6 +12,15 @@ def health_check():
 def test():
     return "Test page works! Server is running correctly.", 200
 
+@main.route('/db-test')
+def db_test():
+    try:
+        # Test database connection
+        users = User.query.all()
+        return f"Database test successful! Found {len(users)} users: {[u.name for u in users]}", 200
+    except Exception as e:
+        return f"Database test failed: {str(e)}", 500
+
 @main.route('/me')
 def me():
     if current_user.is_authenticated:
@@ -49,15 +58,32 @@ def index():
     
     if request.method == "POST":
         try:
-            hashed_password = bcrypt.generate_password_hash(request.form['password']).decode('utf-8')
+            print(f"POST request received: {request.form}")
             
-            user = User(name = request.form['name'], password = hashed_password )
+            # Check if user already exists
+            existing_user = User.query.filter_by(name=request.form['name']).first()
+            if existing_user:
+                return "User already exists! Please choose a different name.", 400
+            
+            hashed_password = bcrypt.generate_password_hash(request.form['password']).decode('utf-8')
+            print(f"Password hashed successfully")
+            
+            user = User(name=request.form['name'], password=hashed_password)
+            print(f"User object created: {user}")
             
             db.session.add(user)
+            print(f"User added to session")
+            
             db.session.commit()
+            print(f"User committed to database")
+            
+            return "User created successfully! <a href='/login'>Login here</a>", 200
+            
         except Exception as e:
             print(f"Database error: {e}")
-            return "Error creating user. Please try again.", 500
+            import traceback
+            traceback.print_exc()
+            return f"Error creating user: {str(e)}. Please try again.", 500
     
     try:
         return render_template('main/index.html')
@@ -84,15 +110,24 @@ def index():
 def login():
     if request.method == "POST":
         try:
+            print(f"Login POST request received: {request.form}")
+            
             user = User.query.filter_by(name=request.form['name']).first()
+            print(f"User found: {user}")
+            
             if user and bcrypt.check_password_hash(user.password, request.form['password']):
-                login_user(user, remember = request.form.get('remember'))
+                print(f"Password correct, logging in user: {user.name}")
+                login_user(user, remember=request.form.get('remember'))
                 return redirect(f'/{current_user.name}')
             else:
-                return render_template('main/login.html', error='Неверное имя пользователя или пароль')
+                print(f"Login failed for user: {request.form['name']}")
+                return "Invalid username or password. Please try again.", 401
+                
         except Exception as e:
             print(f"Login error: {e}")
-            return "Error during login. Please try again.", 500
+            import traceback
+            traceback.print_exc()
+            return f"Error during login: {str(e)}. Please try again.", 500
     
     try:
         return render_template('main/login.html')
