@@ -1,0 +1,13 @@
+{% extends 'main/base.html' %}
+
+{% block users %}
+<a href="{{ url_for(liza)}}">
+    <img src="{{ url_for('static', filename='images/avatars/Liza-avatar.jpg') }}" class="avatar-image" alt="Лиза">
+</a>
+<a href="{{ url_for(makar)}}">
+    <img src="{{ url_for('static', filename='images/avatars/мем макар.jpg') }}" class="avatar-image" alt="BardMakar">
+</a>
+<a href="{{ url_for(me)}}">
+    <img src="{{ url_for('static', filename='images/avatars/me_avatar.jpg') }}" class="avatar-massage" alt="Я">
+</a>
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends 'main/base.html' %}
+
+
+
+
+{% block chat2 %}
+<a href="{{ url_for('me/me_liza.chat_me_liza') }}" class="chat-elem">
+                    <img src="{{ url_for('static', filename='images/avatars/me_avatar.jpg') }}" class="avatar-image" alt="Лиза">
+                    <div class="chat-info">
+                        <div class="chat-name">
+                            <p class="name-of-chat">Вадим</p>
+                        </div>
+                        <div class="last-massege">{{ last_message_makar if last_message_makar else "Нет сообщений" }}</div>
+                    </div>
+                </a>
+{% endblock %}

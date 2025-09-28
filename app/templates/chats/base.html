@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="{{ url_for('static', filename='css/main.css') }}" type="text/css" rel="stylesheet">
+    <title>Zpenr messenger - Чат</title>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Левая панель с чатами -->
+        <div class="sidebar">
+            <div class="settings-header">
+                <button class="menu">
+                    <img src="{{ url_for('static', filename='images/635357373755808964.png') }}" class="settings-icon" alt="Меню">
+                </button>
+            </div>
+            
+            <div class="chats-list">
+                
+                {% block chat1 %}{% endblock %}
+                {% block chat2 %}{% endblock %}
+                
+            </div>
+        </div>
+
+        <!-- Область чата -->
+        <div class="chat-area">
+            <div class="chat-header">
+                <h1 class="chat-title"></h1>
+            </div>
+            
+            <div class="massages" id="messagesContainer">
+                {% block messages %}
+                <!-- Сообщения будут здесь -->
+                {% endblock %}
+            </div>
+
+            <!-- Форма ввода сообщений -->
+            <div class="message-input-container">
+                {% block form %}
+                <form method="post" class="type-massage" id="massageForm">
+                    <input name="mess" type="text" class="type-massage-input" placeholder="Введите сообщение...">
+                    <button type="submit" class="send-massage">Отправить</button>
+                </form>
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Автопрокрутка вниз при загрузке
+        document.addEventListener('DOMContentLoaded', function() {
+            const messagesContainer = document.getElementById('messagesContainer');
+            if (messagesContainer) {
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }
+        });
+    </script>
+</body>
+</html>

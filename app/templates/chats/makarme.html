@@ -1,0 +1,39 @@
+{% extends 'chats/base.html' %}
+
+{% block chat1 %}
+<a href="{{ url_for('me/me_liza.chat_me_liza') }}" class="chat-elem">
+                    <img src="{{ url_for('static', filename='images/avatars/me_avatar.jpg') }}" class="avatar-image" alt="Лиза">
+                    <div class="chat-info">
+                        <div class="chat-name">
+                            <p class="name-of-chat">Вадим</p>
+                        </div>
+                        <div class="last-massege">{{ last_message_makar if last_message_makar else "Нет сообщений" }}</div>
+                    </div>
+                </a>
+{% endblock %}
+
+{% block messages %}
+    {% if messages %}
+        {% for message in messages %}
+            {% if message.author_of_massage == 'makar' %}
+            <div class="massage massage-from-me">
+                <img src="{{ url_for('static', filename='images/avatars/мем макар.jpg') }}" class="avatar-massage" alt="Я">
+                <div class="message-content">
+                    <p class="massage-text">{{ message.massage }}</p>
+                </div>
+            </div>
+            {% else %}
+            <div class="massage">
+                <img src="{{ url_for('static', filename='images/avatars/me_avatar.jpg') }}" class="avatar-massage" alt="BardMakar">
+                <div class="message-content">
+                    <p class="massage-text">{{ message.massage }}</p>
+                </div>
+            </div>
+            {% endif %}
+        {% endfor %}
+    {% else %}
+        <div class="no-messages">
+            <p>Пока нет сообщений с BardMakar</p>
+        </div>
+    {% endif %}
+{% endblock %}

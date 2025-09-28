@@ -1,0 +1,29 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: postgres
+    environment:
+      - POSTGRES_USER=messenger_user
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=messenger_db
+    ports:
+      - "54321:5432"
+    restart: unless-stopped
+
+  flask:
+    build: .
+    container_name: flask
+    environment:
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_USER=messenger_user
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=messenger_db
+      - FLASK_ENV=development
+    depends_on:
+      - postgres
+    ports:
+      - "5000:8080"
+    restart: unless-stopped
