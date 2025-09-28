@@ -31,9 +31,19 @@ def create_app(config_class=Config):
 
     with app.app_context():
         try:
+            # Create database tables
             db.create_all()
+            print("Database tables created successfully")
+            
+            # Test database connection
+            from .models.user import User
+            user_count = User.query.count()
+            print(f"Database connection successful. Users in database: {user_count}")
+            
         except Exception as e:
-            print(f"Database warning: {e}")
+            print(f"Database initialization error: {e}")
+            import traceback
+            traceback.print_exc()
 
     # Error handlers
     @app.errorhandler(500)
