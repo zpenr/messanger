@@ -11,8 +11,10 @@ from .routes.chat_makar_me import makar_me
 from .routes.main import main
 
 def create_app(config_class=Config):
+    print("Starting Flask app initialization...")
     app = Flask(__name__)    
     app.config.from_object(config_class)
+    print("Configuration loaded successfully")
 
     app.register_blueprint(user)
     app.register_blueprint(massage)
@@ -23,18 +25,23 @@ def create_app(config_class=Config):
     app.register_blueprint(me_makar)
     app.register_blueprint(makar_me)
 
+    print("Initializing extensions...")
     db.init_app(app)
     migrate.init_app(app, db)
     login_manager.init_app(app)
+    print("Extensions initialized successfully")
 
     login_manager.login_view = 'user.login'
     login_manager.login_message = 'Войди бля'
 
+    print("Creating database tables...")
     with app.app_context():
         try:
             db.create_all()
+            print("Database tables created successfully")
         except Exception as e:
             print(f"Database initialization warning: {e}")
             # Continue without failing - tables might already exist
 
+    print("Flask app initialization completed successfully")
     return app
