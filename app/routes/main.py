@@ -63,7 +63,22 @@ def index():
         return render_template('main/index.html')
     except Exception as e:
         print(f"Template error: {e}")
-        return "Error loading page. Please try again.", 500
+        # Fallback to simple HTML if template fails
+        return """
+        <html>
+        <head><title>ZPENR Messenger</title></head>
+        <body>
+            <h1>ZPENR Messenger</h1>
+            <p>Welcome to the messenger!</p>
+            <form method="POST">
+                <input type="text" name="name" placeholder="Username" required><br><br>
+                <input type="password" name="password" placeholder="Password" required><br><br>
+                <button type="submit">Register</button>
+            </form>
+            <p><a href="/login">Login</a></p>
+        </body>
+        </html>
+        """, 200
 
 @main.route('/login', methods = ['POST', 'GET'])
 def login():
@@ -83,7 +98,21 @@ def login():
         return render_template('main/login.html')
     except Exception as e:
         print(f"Template error: {e}")
-        return "Error loading login page. Please try again.", 500
+        # Fallback to simple HTML if template fails
+        return """
+        <html>
+        <head><title>Login - ZPENR Messenger</title></head>
+        <body>
+            <h1>Login</h1>
+            <form method="POST">
+                <input type="text" name="name" placeholder="Username" required><br><br>
+                <input type="password" name="password" placeholder="Password" required><br><br>
+                <button type="submit">Login</button>
+            </form>
+            <p><a href="/">Register</a></p>
+        </body>
+        </html>
+        """, 200
 
 @main.route('/logout', methods = ['POST', 'GET'])
 def logout():
