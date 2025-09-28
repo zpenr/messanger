@@ -8,6 +8,10 @@ main = Blueprint('main', __name__)
 def health_check():
     return jsonify({"status": "healthy", "message": "Service is running"}), 200
 
+@main.route('/test')
+def test():
+    return "Test page works! Server is running correctly.", 200
+
 @main.route('/me')
 def me():
     if current_user.is_authenticated:
@@ -44,24 +48,42 @@ def index():
         return jsonify({"status": "healthy", "message": "Service is running"}), 200
     
     if request.method == "POST":
-        hashed_password = bcrypt.generate_password_hash(request.form['password']).decode('utf-8')
-        
-        user = User(name = request.form['name'], password = hashed_password )
-        
-        db.session.add(user)
-        db.session.commit()
-    return render_template('main/index.html')
+        try:
+            hashed_password = bcrypt.generate_password_hash(request.form['password']).decode('utf-8')
+            
+            user = User(name = request.form['name'], password = hashed_password )
+            
+            db.session.add(user)
+            db.session.commit()
+        except Exception as e:
+            print(f"Database error: {e}")
+            return "Error creating user. Please try again.", 500
+    
+    try:
+        return render_template('main/index.html')
+    except Exception as e:
+        print(f"Template error: {e}")
+        return "Error loading page. Please try again.", 500
 
 @main.route('/login', methods = ['POST', 'GET'])
 def login():
     if request.method == "POST":
-        user = User.query.filter_by(name=request.form['name']).first()
-        if user and bcrypt.check_password_hash(user.password, request.form['password']):
-            login_user(user, remember = request.form.get('remember'))
-            return redirect(f'/{current_user.name}')
-        else:
-            return render_template('main/login.html', error='Неверное имя пользователя или пароль')
-    return render_template('main/login.html')
+        try:
+            user = User.query.filter_by(name=request.form['name']).first()
+            if user and bcrypt.check_password_hash(user.password, request.form['password']):
+                login_user(user, remember = request.form.get('remember'))
+                return redirect(f'/{current_user.name}')
+            else:
+                return render_template('main/login.html', error='Неверное имя пользователя или пароль')
+        except Exception as e:
+            print(f"Login error: {e}")
+            return "Error during login. Please try again.", 500
+    
+    try:
+        return render_template('main/login.html')
+    except Exception as e:
+        print(f"Template error: {e}")
+        return "Error loading login page. Please try again.", 500
 
 @main.route('/logout', methods = ['POST', 'GET'])
 def logout():
