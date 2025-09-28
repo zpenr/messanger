@@ -77,7 +77,7 @@ def index():
             db.session.commit()
             print(f"User committed to database")
             
-            return "User created successfully! <a href='/login'>Login here</a>", 200
+            return redirect('/login'), 200
             
         except Exception as e:
             print(f"Database error: {e}")
@@ -86,7 +86,7 @@ def index():
             return f"Error creating user: {str(e)}. Please try again.", 500
     
     try:
-        return redirect('/login')
+        return render_template('main/index.html')
     except Exception as e:
         print(f"Template error: {e}")
         # Fallback to simple HTML if template fails
