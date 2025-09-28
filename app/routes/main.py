@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template,request, redirect, abort, jsonify
 from ..extensions import bcrypt, db
 from flask_login import login_user, logout_user, current_user
-from .user import User
+from ..models.user import User
 main = Blueprint('main', __name__)
 
 @main.route('/health')
