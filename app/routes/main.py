@@ -86,7 +86,7 @@ def index():
             return f"Error creating user: {str(e)}. Please try again.", 500
     
     try:
-        return render_template('main/index.html')
+        return redirect('/login')
     except Exception as e:
         print(f"Template error: {e}")
         # Fallback to simple HTML if template fails
