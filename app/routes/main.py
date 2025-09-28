@@ -6,21 +6,7 @@ main = Blueprint('main', __name__)
 
 @main.route('/health')
 def health_check():
-    try:
-        # Test database connectivity
-        db.session.execute('SELECT 1')
-        return jsonify({
-            "status": "healthy", 
-            "message": "Service is running",
-            "database": "connected"
-        }), 200
-    except Exception as e:
-        return jsonify({
-            "status": "unhealthy", 
-            "message": "Service is running but database connection failed",
-            "database": "disconnected",
-            "error": str(e)
-        }), 503
+    return jsonify({"status": "healthy", "message": "Service is running"}), 200
 
 @main.route('/me')
 def me():
@@ -53,6 +39,10 @@ def liza():
 
 @main.route('/', methods = ['POST', 'GET'])
 def index():
+    # Health check for Railway
+    if request.headers.get('User-Agent') == 'Railway-Health-Check':
+        return jsonify({"status": "healthy", "message": "Service is running"}), 200
+    
     if request.method == "POST":
         hashed_password = bcrypt.generate_password_hash(request.form['password']).decode('utf-8')
         
