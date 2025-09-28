@@ -8,18 +8,18 @@ main = Blueprint('main', __name__)
 def health_check():
     return jsonify({"status": "healthy", "message": "Service is running"}), 200
 
-@main.route('/test')
-def test():
-    return "Test page works! Server is running correctly.", 200
+# @main.route('/test')
+# def test():
+#     return "Test page works! Server is running correctly.", 200
 
-@main.route('/db-test')
-def db_test():
-    try:
-        # Test database connection
-        users = User.query.all()
-        return f"Database test successful! Found {len(users)} users: {[u.name for u in users]}", 200
-    except Exception as e:
-        return f"Database test failed: {str(e)}", 500
+# @main.route('/db-test')
+# def db_test():
+#     try:
+#         # Test database connection
+#         users = User.query.all()
+#         return f"Database test successful! Found {len(users)} users: {[u.name for u in users]}", 200
+#     except Exception as e:
+#         return f"Database test failed: {str(e)}", 500
 
 @main.route('/me')
 def me():
@@ -90,21 +90,7 @@ def index():
     except Exception as e:
         print(f"Template error: {e}")
         # Fallback to simple HTML if template fails
-        return """
-        <html>
-        <head><title>ZPENR Messenger</title></head>
-        <body>
-            <h1>ZPENR Messenger</h1>
-            <p>Welcome to the messenger!</p>
-            <form method="POST">
-                <input type="text" name="name" placeholder="Username" required><br><br>
-                <input type="password" name="password" placeholder="Password" required><br><br>
-                <button type="submit">Register</button>
-            </form>
-            <p><a href="/login">Login</a></p>
-        </body>
-        </html>
-        """, 200
+        return redirect('/login'), 200
 
 @main.route('/login', methods = ['POST', 'GET'])
 def login():
