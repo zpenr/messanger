@@ -1,13 +1,13 @@
-FROM python:3.12.3
+dockerfile
+FROM python:3.9-slim
 
 WORKDIR /app
 
-ADD . /app
-
-RUN apt-get update -y && \
-    apt-get install -y --no-install-recommends gcc build-essential && \
-    rm -rf /var/lib/apt/lists/*
-
+COPY requirements.txt .
 RUN pip install -r requirements.txt
 
-CMD ["gunicorn", "--bind", "0.0.0.0:$PORT", "run:application"]
+COPY . .
+
+EXPOSE 8080
+
+CMD ["gunicorn", "--bind", "0.0.0.0:8080", "app:app"]
