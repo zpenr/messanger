@@ -31,6 +31,10 @@ def create_app(config_class=Config):
     login_manager.login_message = 'Войди бля'
 
     with app.app_context():
-        db.create_all()
+        try:
+            db.create_all()
+        except Exception as e:
+            print(f"Database initialization warning: {e}")
+            # Continue without failing - tables might already exist
 
     return app

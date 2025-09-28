@@ -6,7 +6,21 @@ main = Blueprint('main', __name__)
 
 @main.route('/health')
 def health_check():
-    return jsonify({"status": "healthy", "message": "Service is running"}), 200
+    try:
+        # Test database connectivity
+        db.session.execute('SELECT 1')
+        return jsonify({
+            "status": "healthy", 
+            "message": "Service is running",
+            "database": "connected"
+        }), 200
+    except Exception as e:
+        return jsonify({
+            "status": "unhealthy", 
+            "message": "Service is running but database connection failed",
+            "database": "disconnected",
+            "error": str(e)
+        }), 503
 
 @main.route('/me')
 def me():
